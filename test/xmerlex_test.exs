@@ -72,9 +72,12 @@ defmodule XmerlexTest do
   test "XML attribute values can be found using XPath queries" do
     xml = create_xpath_test_xml |> Xmerlex.parse_string
     assert(xml)
-    assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key1')) == ["Needle"])
-    assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key2')) == [nil])
-    assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key1')) == ["needle","Needle"])
-    assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key2')) == [nil,nil])
+    assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key1')) == [["Needle"]])
+    assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key2')) == [[]])
+    assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key1')) == [["needle"],["Needle"]])
+    assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key2')) == [[],[]])
+    assert(Xmerlex.Node.find_attribute(xml, '//b/@key1') == ["needle","Needle"])
+    assert(Xmerlex.Node.find_attribute(xml, '//b/@key2') == [])
+    assert(Xmerlex.Node.find_attribute(xml, '//c[@key1="needle"]/../@key1') == ["Needle"])
   end
 end
