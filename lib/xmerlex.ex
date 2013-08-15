@@ -32,7 +32,7 @@ defmodule Xmerlex do
 
     @doc "Finds the value of the attribute matching the specified xpath_query using node as current node."
     def find_attribute(node, xpath_query) do
-      :xmerl_xpath.string(xpath_query, node.xml)
+      :xmerl_xpath.string(to_char_list(xpath_query), node.xml)
         |> Enum.map attribute_value(&1)
     end
 

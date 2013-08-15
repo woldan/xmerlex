@@ -79,5 +79,8 @@ defmodule XmerlexTest do
     assert(Xmerlex.Node.find_attribute(xml, '//b/@key1') == ["needle","Needle"])
     assert(Xmerlex.Node.find_attribute(xml, '//b/@key2') == [])
     assert(Xmerlex.Node.find_attribute(xml, '//c[@key1="needle"]/../@key1') == ["Needle"])
+    assert(Xmerlex.Node.find_attribute(xml, "//b/@key1") == ["needle","Needle"])
+    assert(Xmerlex.Node.find_attribute(xml, "//b/@key2") == [])
+    assert(Xmerlex.Node.find_attribute(xml, "//c[@key1=\"needle\"]/../@key1") == ["Needle"])
   end
 end
