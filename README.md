@@ -26,3 +26,4 @@ E.g. launch `iex -S mix` and use it like this:
 
     doc |> Xmerlex.Node.find("//release") |> Enum.count
     doc |> Xmerlex.Node.find_attribute '//release/@id'
+    doc |> Xmerlex.Node.first_text '//release/title'

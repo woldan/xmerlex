@@ -12,16 +12,16 @@ defmodule XmerlexTest do
   defp create_xpath_test_xml do
     "<a>
       <b key1=\"needle\">
-       <c key2=\"needle\" />
+       <c key2=\"needle\">some text</c>
        <d key2=\"foo\" key1=\"bar\" />
       </b>
       <b key1=\"Needle\">
        <c key2=\"needle\" />
-       <c key1=\"needle\" />
+       <c key1=\"needle\">some text</c>
        <d key2=\"foo\" key1=\"bar\" />
       </b>
       <x key1=\"Needle\">
-       <y key2=\"needle\" />
+       <y key2=\"needle\">the text of the y element</y>
       </x>
      </a>"
   end
@@ -43,7 +43,7 @@ defmodule XmerlexTest do
     assert(xml)
   end
 
-  test "Simple XPath queries written as strings yield parts of XML trees" do
+  test "XPath queries written as strings yield parts of XML trees" do
     xml = create_xpath_test_xml |> Xmerlex.parse_string
     assert(xml)
     assert(Enum.count(Xmerlex.Node.find(xml, "//b")) == 2)
@@ -52,7 +52,7 @@ defmodule XmerlexTest do
     assert(Enum.count(recall) == 1)
   end
 
-  test "Simple XPath queries written as character lists yield parts of XML trees" do
+  test "XPath queries written as character lists yield parts of XML trees" do
     xml = create_xpath_test_xml |> Xmerlex.parse_string
     assert(xml)
     assert(Enum.count(Xmerlex.Node.find(xml, '//b')) == 2)
@@ -76,11 +76,32 @@ defmodule XmerlexTest do
     assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key2')) == [[]])
     assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key1')) == [["needle"],["Needle"]])
     assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key2')) == [[],[]])
+    assert(Xmerlex.Node.first(xml, '//x') |> Xmerlex.Node.find_attribute('./@key1') == ["Needle"])
+    assert(Xmerlex.Node.first(xml, '//x') |> Xmerlex.Node.find_attribute('./@key2') == [])
+    assert(Xmerlex.Node.first(xml, '//b') |> Xmerlex.Node.find_attribute('./@key1') == ["needle"])
+    assert(Xmerlex.Node.first(xml, '//b') |> Xmerlex.Node.find_attribute('./@key2') == [])
     assert(Xmerlex.Node.find_attribute(xml, '//b/@key1') == ["needle","Needle"])
+    assert(Xmerlex.Node.first_attribute(xml, '//b/@key1') == "needle")
     assert(Xmerlex.Node.find_attribute(xml, '//b/@key2') == [])
+    assert(Xmerlex.Node.first_attribute(xml, '//b/@key2') == nil)
     assert(Xmerlex.Node.find_attribute(xml, '//c[@key1="needle"]/../@key1') == ["Needle"])
+    assert(Xmerlex.Node.first_attribute(xml, '//c[@key1="needle"]/../@key1') =="Needle")
     assert(Xmerlex.Node.find_attribute(xml, "//b/@key1") == ["needle","Needle"])
+    assert(Xmerlex.Node.first_attribute(xml, "//b/@key1") == "needle")
     assert(Xmerlex.Node.find_attribute(xml, "//b/@key2") == [])
+    assert(Xmerlex.Node.first_attribute(xml, "//b/@key2") == nil)
     assert(Xmerlex.Node.find_attribute(xml, "//c[@key1=\"needle\"]/../@key1") == ["Needle"])
+    assert(Xmerlex.Node.first_attribute(xml, "//c[@key1=\"needle\"]/../@key1") == "Needle")
+  end
+
+  test "XML element texts can be found using XPath queries" do
+    xml = create_xpath_test_xml |> Xmerlex.parse_string
+    assert(xml)
+    assert(Xmerlex.Node.find_text(xml, '//c') == [ "some text", "some text" ])
+    assert(Xmerlex.Node.first_text(xml, '//c') == "some text")
+    assert(Xmerlex.Node.find_text(xml, '//y') == [ "the text of the y element" ])
+    assert(Xmerlex.Node.first_text(xml, '//y') == "the text of the y element")
+    assert(Xmerlex.Node.find_text(xml, '//*[@key2="needle"]') == [ "some text", "the text of the y element" ])
+    assert(Xmerlex.Node.first_text(xml, '//*[@key2="needle"]') == "some text")
   end
 end
