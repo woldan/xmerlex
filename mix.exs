@@ -4,7 +4,7 @@ defmodule Xmerlex.Mixfile do
   def project do
     [ app: :xmerlex,
       version: "0.0.1",
-      elixir: "~> 0.10.2-dev",
+      elixir: "~> 0.10.1",
       deps: deps ]
   end
 
