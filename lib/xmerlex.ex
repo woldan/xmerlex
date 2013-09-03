@@ -43,16 +43,16 @@ defmodule Xmerlex do
 
     @doc "Finds the text of the Nodes matching the specified xpath_query using node as current node."
     def find_text(node, xpath_query) do
-      query = to_binary(xpath_query) <> "/text()"
+      query = to_string(xpath_query) <> "/text()"
       :xmerl_xpath.string(to_char_list(query), node.xml)
         |> Enum.map text_value(&1)
     end
     @doc "Finds only the text of the first element matching the specified xpath_query using node as current node."
     def first_text(node, xpath_query), do: find_text(node, xpath_query) |> Enum.first
 
-    defp attribute_value(:xmlAttribute[value: value]), do: :unicode.characters_to_binary(value)
+    defp attribute_value(:xmlAttribute[value: value]), do: to_string(value)
     defp attribute_value(_), do: nil
-    defp text_value(:xmlText[value: value]), do: :unicode.characters_to_binary(value)
+    defp text_value(:xmlText[value: value]), do: to_string(value)
     defp text_value(_), do: nil
   end
 
