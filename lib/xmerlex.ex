@@ -28,7 +28,7 @@ defmodule Xmerlex do
     @doc "Finds the Node list matching the specified xpath_query using node as current node."
     def find(node, xpath_query) do
       :xmerl_xpath.string(to_char_list(xpath_query), node.xml)
-        |> Enum.map __MODULE__.from_xmerl(&1)
+        |> Enum.map &__MODULE__.from_xmerl(&1)
     end
     @doc "Finds only the ifirst Node matching the specified xpath_query using node as current node."
     def first(node, xpath_query), do: find(node, xpath_query) |> Enum.first
@@ -36,7 +36,7 @@ defmodule Xmerlex do
     @doc "Finds the value of the attribute matching the specified xpath_query using node as current node."
     def find_attribute(node, xpath_query) do
       :xmerl_xpath.string(to_char_list(xpath_query), node.xml)
-        |> Enum.map attribute_value(&1)
+        |> Enum.map &attribute_value(&1)
     end
     @doc "Finds only the value of the first attribute matching the specified xpath_query using node as current node."
     def first_attribute(node, xpath_query), do: find_attribute(node, xpath_query) |> Enum.first
@@ -45,7 +45,7 @@ defmodule Xmerlex do
     def find_text(node, xpath_query) do
       query = to_string(xpath_query) <> "/text()"
       :xmerl_xpath.string(to_char_list(query), node.xml)
-        |> Enum.map text_value(&1)
+        |> Enum.map &text_value(&1)
     end
     @doc "Finds only the text of the first element matching the specified xpath_query using node as current node."
     def first_text(node, xpath_query), do: find_text(node, xpath_query) |> Enum.first

@@ -4,7 +4,7 @@ defmodule Xmerlex.Mixfile do
   def project do
     [ app: :xmerlex,
       version: "0.0.1",
-      elixir: "~> 0.10.1",
+      elixir: "~> 0.11.0",
       deps: deps ]
   end
 
@@ -17,7 +17,7 @@ defmodule Xmerlex.Mixfile do
   # { :foobar, "~> 0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
     [
-      {:httpotion,"0.2.0",[github: "myfreeweb/httpotion"]}
+      {:httpotion,"0.2.3",[github: "myfreeweb/httpotion"]}
     ]
   end
 end

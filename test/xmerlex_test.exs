@@ -48,7 +48,7 @@ defmodule XmerlexTest do
     assert(xml)
     assert(Enum.count(Xmerlex.Node.find(xml, "//b")) == 2)
     assert(Enum.count(Xmerlex.Node.find(xml, "//c")) == 3)
-    recall = Xmerlex.Node.find(xml, "//x") |> Enum.map Xmerlex.Node.find(&1, "//y")
+    recall = Xmerlex.Node.find(xml, "//x") |> Enum.map &Xmerlex.Node.find(&1, "//y")
     assert(Enum.count(recall) == 1)
   end
 
@@ -57,7 +57,7 @@ defmodule XmerlexTest do
     assert(xml)
     assert(Enum.count(Xmerlex.Node.find(xml, '//b')) == 2)
     assert(Enum.count(Xmerlex.Node.find(xml, '//c')) == 3)
-    recall = Xmerlex.Node.find(xml, '//x') |> Enum.map Xmerlex.Node.find(&1, '//y')
+    recall = Xmerlex.Node.find(xml, '//x') |> Enum.map &Xmerlex.Node.find(&1, '//y')
     assert(Enum.count(recall) == 1)
   end
 
@@ -72,10 +72,10 @@ defmodule XmerlexTest do
   test "XML attribute values can be found using XPath queries" do
     xml = create_xpath_test_xml |> Xmerlex.parse_string
     assert(xml)
-    assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key1')) == [["Needle"]])
-    assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key2')) == [[]])
-    assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key1')) == [["needle"],["Needle"]])
-    assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(Xmerlex.Node.find_attribute(&1, './@key2')) == [[],[]])
+    assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(&Xmerlex.Node.find_attribute(&1, './@key1')) == [["Needle"]])
+    assert(Xmerlex.Node.find(xml, '//x') |> Enum.map(&Xmerlex.Node.find_attribute(&1, './@key2')) == [[]])
+    assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(&Xmerlex.Node.find_attribute(&1, './@key1')) == [["needle"],["Needle"]])
+    assert(Xmerlex.Node.find(xml, '//b') |> Enum.map(&Xmerlex.Node.find_attribute(&1, './@key2')) == [[],[]])
     assert(Xmerlex.Node.first(xml, '//x') |> Xmerlex.Node.find_attribute('./@key1') == ["Needle"])
     assert(Xmerlex.Node.first(xml, '//x') |> Xmerlex.Node.find_attribute('./@key2') == [])
     assert(Xmerlex.Node.first(xml, '//b') |> Xmerlex.Node.find_attribute('./@key1') == ["needle"])
